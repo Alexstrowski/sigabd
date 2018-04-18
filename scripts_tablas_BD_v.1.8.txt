@@ -1,0 +1,711 @@
+/*==================================================================*/
+/*-----------------------CREAR TABLAS-------------------------------*/
+/*---TABLAS: DIRECTIVA, ADMINISTRATIVO, ALUMNO, PAGOS, USUARIO, TIPO_USUARIO, MODULO, ACCEDE---*/
+/*==================================================================*/
+
+
+CREATE SEQUENCE id_direc_seq;
+CREATE TABLE DIRECTIVA(
+	id_direc SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_direc_seq'),
+    id_usuario NUMERIC NOT NULL,
+    nombres VARCHAR(30) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    codigo VARCHAR(8) UNIQUE NOT NULL,
+    DNI CHARACTER(8) UNIQUE NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    telefono VARCHAR(15) NOT NULL
+);
+ALTER SEQUENCE id_direc_seq OWNED BY DIRECTIVA.id_direc;
+
+
+CREATE SEQUENCE id_admin_seq;
+CREATE TABLE ADMINISTRATIVO(
+	id_admin SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_admin_seq'),
+    id_usuario NUMERIC NOT NULL,
+    nombres VARCHAR(30) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    codigo VARCHAR(8) UNIQUE NOT NULL,
+    DNI CHARACTER(8) UNIQUE NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    telefono VARCHAR(15) NOT NULL
+);
+ALTER SEQUENCE id_admin_seq OWNED BY ADMINISTRATIVO.id_admin;
+
+
+CREATE SEQUENCE id_alum_seq;
+CREATE TABLE ALUMNO(
+	id_alum NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_alum_seq'),
+    id_usuario NUMERIC NOT NULL,
+    id_facultad SMALLINT NOT NULL,
+    ape_nom VARCHAR(70)  UNIQUE NOT NULL,
+    codigo VARCHAR(8)
+);
+ALTER SEQUENCE id_alum_seq OWNED BY ALUMNO.id_alum;
+
+
+CREATE SEQUENCE id_rec_seq;
+CREATE TABLE RECAUDACIONES(
+    id_rec NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_rec_seq'),
+    id_alum NUMERIC NOT NULL,
+    id_concepto SMALLINT NOT NULL,
+    id_registro NUMERIC NOT NULL, 
+	moneda CHARACTER(3),
+    numero VARCHAR(10) UNIQUE,
+    importe MONEY,
+    carnet VARCHAR(30),
+    autoseguro VARCHAR(30),
+    ave VARCHAR(30),
+    devol_tran VARCHAR(30),
+    observacion VARCHAR(100),
+    fecha DATE,
+    flag_pago BOOLEAN
+);
+ALTER SEQUENCE id_rec_seq OWNED BY RECAUDACIONES.id_rec;
+
+
+CREATE SEQUENCE id_usuario_seq;
+CREATE TABLE USUARIO(
+	id_usuario NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_usuario_seq'),
+    id_TU SMALLINT NOT NULL,
+    user_name VARCHAR(30) UNIQUE NOT NULL,
+    pass VARCHAR(30) NOT NULL
+);
+ALTER SEQUENCE id_usuario_seq OWNED BY USUARIO.id_usuario;
+
+
+CREATE SEQUENCE id_TU_seq;
+CREATE TABLE TIPO_USUARIO(
+	id_TU SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_TU_seq'),
+    nombre_tipo VARCHAR(30) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_TU_seq OWNED BY TIPO_USUARIO.id_TU;
+
+
+CREATE SEQUENCE id_mod_seq;
+CREATE TABLE MODULO(
+	id_mod SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_mod_seq'),
+    nombre VARCHAR(30) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_mod_seq OWNED BY MODULO.id_mod;
+
+
+CREATE TABLE ACCEDE(
+    id_TU SMALLINT NOT NULL,
+    id_mod SMALLINT NOT NULL
+);
+
+
+CREATE TABLE AUDITORIA(
+	id_admin SMALLINT NOT NULL,
+    id_rec NUMERIC NOT NULL,
+    fecha DATE NOT NULL
+);
+
+CREATE SEQUENCE id_facultad_seq;
+CREATE TABLE FACULTAD(
+	id_facultad SMALLINT NOT NULL DEFAULT NEXTVAL('id_facultad_seq'),
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_facultad_seq OWNED BY FACULTAD.id_facultad;
+
+
+CREATE SEQUENCE id_concepto_seq;
+CREATE TABLE CONCEPTO(
+	id_concepto SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_concepto_seq'),
+    concepto CHARACTER(6) UNIQUE NOT NULL,
+    concep_a CHARACTER(3) NOT NULL,
+    concep_b CHARACTER(3) NOT NULL
+);
+ALTER SEQUENCE id_concepto_seq OWNED BY CONCEPTO.id_concepto;
+
+
+CREATE SEQUENCE id_registro_seq;
+CREATE TABLE REGISTRO_CARGA(
+	id_registro NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_registro_seq'),
+    nombre_equipo VARCHAR(70),
+    ip VARCHAR(30),
+    ruta VARCHAR(200),
+    fecha_carga TIMESTAMP
+);
+ALTER SEQUENCE id_registro_seq OWNED BY REGISTRO_CARGA.id_registro;
+
+
+CREATE SEQUENCE id_raw_seq;
+CREATE TABLE RECAUDACIONES_RAW(
+	id_raw NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_raw_seq'),
+    moneda CHARACTER(3),
+    dependencia VARCHAR(50),
+    concep CHARACTER(6),
+    concep_a CHARACTER(3),
+    concep_b CHARACTER(3),
+    numero VARCHAR(10),
+    codigo CHARACTER(8),
+    nombre VARCHAR(100),
+    importe MONEY,
+    carnet VARCHAR(30),
+    autoseguro VARCHAR(30),
+    ave VARCHAR(30),
+    devol_tran VARCHAR(30),
+    observacion VARCHAR(100),
+    fecha VARCHAR(30)
+);
+ALTER SEQUENCE id_raw_seq OWNED BY RECAUDACIONES_RAW.id_raw;
+
+
+--MODULO 5 - DISPONIBILIDAD DOCENTE
+
+CREATE SEQUENCE "id_docente_seq";
+
+CREATE TABLE DOCENTE (
+  id_docente INT4 NOT NULL DEFAULT nextval('id_docente_seq'),
+  id_usuario NUMERIC NOT NULL,
+  nom_docente varchar(50) NOT NULL,
+  ape_docente varchar(50) NOT NULL,
+  codigo_docente char(10) NOT NULL,
+  dni_docente char(8) NOT NULL,
+  email_docente varchar(70) NOT NULL,
+  celular_docente char(9) NOT NULL,
+  genero char(1) NOT NULL,
+  pagina_web varchar(50) NOT NULL,
+  foto bytea ,
+  fecha_nac date NOT NULL,
+  pais varchar(50) NOT NULL,
+  direccion varchar(80) NOT NULL,
+  sunedu_le varchar(2) NOT NULL,
+  categoria varchar(30) NOT NULL,
+  regimen_dedicacion varchar(30) NOT NULL,
+  cv varchar(100) NOT NULL
+);
+ALTER SEQUENCE id_docente_seq OWNED BY DOCENTE.id_docente;
+
+CREATE SEQUENCE "id_preferencia_seq";
+
+CREATE TABLE PREFERENCIA (
+  id_preferencia INT4 UNIQUE NOT NULL DEFAULT nextval('id_preferencia_seq'),
+  id_docente INT4 NOT NULL,
+  id_curso INT4 NOT NULL
+);
+ALTER SEQUENCE id_preferencia_seq OWNED BY PREFERENCIA.id_preferencia;
+
+CREATE SEQUENCE "id_disponibilidad_seq";
+
+CREATE TABLE DISPONIBILIDAD (
+  id_disponibilidad INT4 UNIQUE NOT NULL DEFAULT nextval('id_disponibilidad_seq'),
+  id_docente INT4 NOT NULL,
+  id_dia char(1) NOT NULL,
+  hr_inicio char(2) NOT NULL,
+  hr_fin char(2) NOT NULL,
+  tot_hrs char(2) NOT NULL
+);
+ALTER SEQUENCE id_disponibilidad_seq OWNED BY DISPONIBILIDAD.id_disponibilidad;
+
+CREATE SEQUENCE "id_curso_seq";
+
+CREATE TABLE CURSO (
+  id_curso INT4 UNIQUE NOT NULL DEFAULT nextval('id_curso_seq'),
+  nom_curso varchar(40) NOT NULL,
+  id_programa INT2 NOT NULL
+);
+ALTER SEQUENCE id_curso_seq OWNED BY CURSO.id_curso;
+
+CREATE SEQUENCE "id_programa_seq";
+
+CREATE TABLE PROGRAMA (
+  id_programa INT2 UNIQUE NOT NULL DEFAULT nextval('id_programa_seq'),
+  nom_programa varchar(50) NOT NULL
+);
+ALTER SEQUENCE id_programa_seq OWNED BY PROGRAMA.id_programa;
+
+CREATE TABLE DIA (
+  id_dia char(1) NOT NULL,
+  nom_dia varchar(10) NOT NULL
+);
+
+CREATE SEQUENCE "id_datos_academ_seq";
+
+CREATE TABLE DATOS_ACADEMICOS (
+  id_dat_academicos INT4 UNIQUE NOT NULL DEFAULT nextval('id_datos_academ_seq'),
+  id_docente INT4 NOT NULL,
+  id_tip_grado char(2) NOT NULL,
+  mencion_grado varchar(60) NOT NULL,
+  centro_estudios varchar(60) NOT NULL,
+  pais_estudios varchar(50) NOT NULL
+);
+ALTER SEQUENCE id_datos_academ_seq OWNED BY DATOS_ACADEMICOS.id_dat_academicos;
+
+CREATE TABLE TIPO_GRADO (
+  id_tip_grado char(2) NOT NULL,
+  nom_tip_grado varchar(30)
+);
+
+-- MODULO 6 - LEGAJO DOCENTE
+--
+-- Estructura de la tabla experiencia_laboral
+--
+CREATE SEQUENCE "id_exp_laboral_seq";
+CREATE TABLE EXPERIENCIA_LABORAL (
+  id_exp_laboral  NUMERIC UNIQUE NOT NULL DEFAULT nextval('id_exp_laboral_seq'),
+  id_docente INT4 NOT NULL,
+  empresa VARCHAR(50) NOT NULL,
+  cargo VARCHAR(50) NOT NULL,
+  sector VARCHAR(50) NOT NULL,
+  fecha_inicio DATE,
+  fecha_fin DATE,
+  createdat timestamp with time zone,
+  updatedat timestamp with time zone
+);
+ALTER SEQUENCE id_exp_laboral_seq OWNED BY EXPERIENCIA_LABORAL.id_exp_laboral;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la tabla laboral_docente
+--
+CREATE SEQUENCE "id_laboral_doc_seq";
+CREATE TABLE LABORAL_DOCENTE (
+  id_laboral_doc  NUMERIC UNIQUE NOT NULL DEFAULT nextval('id_laboral_doc_seq'),
+  id_docente INT4 NOT NULL,
+  universidad VARCHAR(80) NOT NULL,
+  tipo_docente VARCHAR(50) NOT NULL,
+  fecha_inicio DATE,
+  createdat timestamp with time zone,
+  updatedat timestamp with time zone
+);
+ALTER SEQUENCE id_laboral_doc_seq OWNED BY LABORAL_DOCENTE.id_laboral_doc;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la tabla experiencia_asesor_docente
+--
+CREATE SEQUENCE "id_exp_asesor_docente_seq";
+CREATE TABLE EXPERIENCIA_ASESOR_DOCENTE (
+  id_exp_asesor_docente  NUMERIC UNIQUE NOT NULL DEFAULT nextval('id_exp_asesor_docente_seq'),
+  id_docente INT4 NOT NULL,
+  universidad VARCHAR(80) NOT NULL,
+  tesis VARCHAR(70) NOT NULL,
+  tesista VARCHAR(70) NOT NULL,
+  repositorio VARCHAR(70) NOT NULL,
+  fecha_aceptacion DATE,
+  createdat timestamp with time zone,
+  updatedat timestamp with time zone
+);
+ALTER SEQUENCE id_exp_asesor_docente_seq OWNED BY EXPERIENCIA_ASESOR_DOCENTE.id_exp_asesor_docente;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la tabla niveles_programa
+--
+CREATE SEQUENCE "id_niveles_program_seq";
+CREATE TABLE NIVELES_PROGRAMA (
+  id_niveles_program  NUMERIC UNIQUE NOT NULL DEFAULT nextval('id_niveles_program_seq'),
+  id_docente INT4 NOT NULL,
+  pregrado VARCHAR(2) NOT NULL,
+  maestria VARCHAR(2) NOT NULL,
+  doctorado VARCHAR(2) NOT NULL,
+  createdat timestamp with time zone,
+  updatedat timestamp with time zone
+);
+ALTER SEQUENCE id_niveles_program_seq OWNED BY NIVELES_PROGRAMA.id_niveles_program;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de la tabla proyectos_investigacion
+--
+CREATE SEQUENCE "id_proyecto_invest_seq";
+CREATE TABLE PROYECTO_INVESTIGACION (
+  id_proyecto_invest  NUMERIC UNIQUE NOT NULL DEFAULT nextval('id_proyecto_invest_seq'),
+  id_docente INT4 NOT NULL,
+  titulo VARCHAR(50) NOT NULL,
+  descripcion VARCHAR(200) NOT NULL,
+  fecha_inicio DATE,
+  fecha_fin DATE,
+  area_ocde VARCHAR(50) NOT NULL,
+  createdat timestamp with time zone,
+  updatedat timestamp with time zone
+);
+ALTER SEQUENCE id_proyecto_invest_seq OWNED BY PROYECTO_INVESTIGACION.id_proyecto_invest;
+
+
+/*=========================================================================*/
+/*------------------------------PRIMARY KEY--------------------------------*/
+/*=========================================================================*/
+
+
+ALTER TABLE DIRECTIVA 
+ADD PRIMARY KEY (id_direc);
+
+ALTER TABLE ADMINISTRATIVO 
+ADD PRIMARY KEY (id_admin);
+
+ALTER TABLE ALUMNO 
+ADD PRIMARY KEY (id_alum);
+
+ALTER TABLE RECAUDACIONES 
+ADD PRIMARY KEY (id_rec);
+
+ALTER TABLE USUARIO 
+ADD PRIMARY KEY (id_usuario);
+
+ALTER TABLE TIPO_USUARIO 
+ADD PRIMARY KEY (id_TU);
+
+ALTER TABLE MODULO 
+ADD PRIMARY KEY (id_mod);
+
+ALTER TABLE ACCEDE 
+ADD CONSTRAINT pk_accede 
+PRIMARY KEY (id_TU, id_mod);
+
+ALTER TABLE AUDITORIA 
+ADD CONSTRAINT pk_auditoria
+PRIMARY KEY (id_admin, id_rec);
+
+ALTER TABLE FACULTAD 
+ADD PRIMARY KEY (id_facultad);
+
+ALTER TABLE CONCEPTO 
+ADD PRIMARY KEY (id_concepto);
+
+ALTER TABLE REGISTRO_CARGA 
+ADD PRIMARY KEY (id_registro);
+
+ALTER TABLE RECAUDACIONES_RAW 
+ADD PRIMARY KEY (id_raw);
+
+--MODULO 5
+
+ALTER TABLE DOCENTE 
+ADD PRIMARY KEY (id_docente);
+
+ALTER TABLE DATOS_ACADEMICOS 
+ADD PRIMARY KEY (id_dat_academicos);
+
+ALTER TABLE DIA
+ADD PRIMARY KEY (id_dia);
+
+ALTER TABLE DISPONIBILIDAD 
+ADD PRIMARY KEY (id_disponibilidad);
+
+ALTER TABLE PREFERENCIA 
+ADD PRIMARY KEY (id_preferencia);
+
+ALTER TABLE CURSO
+ADD PRIMARY KEY (id_curso);
+
+ALTER TABLE PROGRAMA
+ADD PRIMARY KEY (id_programa);
+
+ALTER TABLE TIPO_GRADO
+ADD PRIMARY KEY (id_tip_grado);
+
+--MODULO 6
+
+ALTER TABLE EXPERIENCIA_LABORAL  
+ADD PRIMARY KEY (id_exp_laboral);
+
+ALTER TABLE LABORAL_DOCENTE
+ADD PRIMARY KEY (id_laboral_doc);
+
+ALTER TABLE EXPERIENCIA_ASESOR_DOCENTE
+ADD PRIMARY KEY (id_exp_asesor_docente);
+
+ALTER TABLE NIVELES_PROGRAMA 
+ADD PRIMARY KEY (id_niveles_program);
+
+ALTER TABLE PROYECTO_INVESTIGACION 
+ADD PRIMARY KEY (id_proyecto_invest);
+
+
+
+/*===========================================================================*/
+/*------------------------------FOREIGN KEY----------------------------------*/
+/*===========================================================================*/
+
+
+ALTER TABLE DIRECTIVA
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE ADMINISTRATIVO
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE ALUMNO
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_alum) REFERENCES ALUMNO(id_alum);
+
+ALTER TABLE USUARIO
+ADD FOREIGN KEY (id_TU) REFERENCES TIPO_USUARIO(id_TU);
+
+ALTER TABLE ACCEDE
+ADD FOREIGN KEY (id_TU) REFERENCES TIPO_USUARIO(id_TU);
+
+ALTER TABLE ACCEDE
+ADD FOREIGN KEY (id_mod) REFERENCES MODULO(id_mod);
+
+ALTER TABLE DOCENTE
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE AUDITORIA
+ADD FOREIGN KEY (id_admin) REFERENCES ADMINISTRATIVO(id_admin);
+
+ALTER TABLE AUDITORIA
+ADD FOREIGN KEY (id_rec) REFERENCES RECAUDACIONES(id_rec);
+
+ALTER TABLE ALUMNO
+ADD FOREIGN KEY (id_facultad) REFERENCES FACULTAD(id_facultad);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_concepto) REFERENCES CONCEPTO(id_concepto);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_registro) REFERENCES REGISTRO_CARGA(id_registro);
+
+
+--MODULO 5
+
+ALTER TABLE PREFERENCIA 
+ADD CONSTRAINT fk_PREFERENCIA_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE PREFERENCIA
+ADD CONSTRAINT fk_PREFERENCIA_to_CURSO FOREIGN KEY (id_curso) REFERENCES CURSO(id_curso);
+
+ALTER TABLE DISPONIBILIDAD 
+ADD CONSTRAINT fk_DISPONIBILIDAD_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE DISPONIBILIDAD 
+ADD CONSTRAINT fk_DISPONIBILIDAD_to_DIA FOREIGN KEY (id_dia) REFERENCES DIA(id_dia);
+
+ALTER TABLE CURSO 
+ADD CONSTRAINT fk_CURSO_to_PROGRAMA FOREIGN KEY (id_programa) REFERENCES PROGRAMA(id_programa);
+
+ALTER TABLE DATOS_ACADEMICOS 
+ADD CONSTRAINT fk_DATOS_ACADEMICOS_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE DATOS_ACADEMICOS 
+ADD CONSTRAINT fK_DATOS_ACADEMICOS_to_TIPO_GRADO FOREIGN KEY (id_tip_grado) REFERENCES TIPO_GRADO(id_tip_grado);
+
+-- MODULO 6
+
+ALTER TABLE EXPERIENCIA_LABORAL  
+ADD FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE LABORAL_DOCENTE
+ADD FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE EXPERIENCIA_ASESOR_DOCENTE
+ADD FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE NIVELES_PROGRAMA 
+ADD FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+ALTER TABLE PROYECTO_INVESTIGACION 
+ADD FOREIGN KEY (id_docente) REFERENCES DOCENTE(id_docente);
+
+
+
+
+/*====================================================================================*/
+/*--------------------------------TRIGGERS AND FUNCTIONS------------------------------*/
+/*====================================================================================*/
+
+					--función que verifica e inserta en FACULTAD
+CREATE OR REPLACE FUNCTION insert_facultad(nombre_facultad varchar) RETURNS NUMERIC AS $$
+DECLARE
+	var_nombre INTEGER DEFAULT 0;
+BEGIN
+ 	var_nombre:=(select COUNT(nombre) from FACULTAD WHERE nombre=nombre_facultad);
+	
+    IF var_nombre = 0 THEN
+    	INSERT INTO FACULTAD(nombre) VALUES(nombre_facultad);
+  	END IF;
+    
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+					--función que verifica e inserta en USUARIO
+CREATE OR REPLACE FUNCTION insert_usuario(user_name_usuario varchar) RETURNS NUMERIC AS $$
+DECLARE
+	var_user_name INTEGER DEFAULT 0;
+BEGIN
+ 	var_user_name:=(select COUNT(user_name) from USUARIO WHERE user_name=user_name_usuario);
+	
+    IF var_user_name = 0 THEN
+    	INSERT INTO USUARIO(id_TU, user_name, pass) VALUES(1,user_name_usuario,'');
+  	END IF;
+    
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+					--función que verifica e inserta en ALUMNO
+CREATE OR REPLACE FUNCTION insert_alumno(id_usuario_alumno NUMERIC, id_facultad_alumno NUMERIC, ape_nom_alumno VARCHAR, codido_alumno CHARACTER(8)) RETURNS NUMERIC AS $$
+DECLARE
+	var_ape_nom INTEGER DEFAULT 0;
+BEGIN
+ 	var_ape_nom:=(select COUNT(ape_nom) from ALUMNO WHERE ape_nom=ape_nom_alumno);
+	
+    IF var_ape_nom = 0 THEN
+    	INSERT INTO ALUMNO(id_usuario, id_facultad, ape_nom, codigo) VALUES(id_usuario_alumno, id_facultad_alumno, ape_nom_alumno, codido_alumno);
+  	END IF;
+    
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+					--función que verifica e inserta en CONCEPTO
+CREATE OR REPLACE FUNCTION insert_concepto(concepto_concepto CHARACTER(6), concep_a_concepto CHARACTER(3), concep_b_concepto CHARACTER(3)) RETURNS NUMERIC AS $$
+DECLARE
+	var_concepto INTEGER DEFAULT 0;
+BEGIN
+ 	var_concepto:=(SELECT COUNT(concepto) FROM CONCEPTO WHERE concepto=concepto_concepto);
+	
+    IF var_concepto = 0 THEN
+    	INSERT INTO CONCEPTO(concepto, concep_a, concep_b) VALUES(concepto_concepto, concep_a_concepto, concep_b_concepto);
+  	END IF;
+    
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+					--función que verifica e inserta en RECAUDACIONES
+CREATE OR REPLACE FUNCTION insert_recaudaciones(id_alum_rec NUMERIC, id_concepto_rec NUMERIC, id_registro_rec NUMERIC, moneda_rec CHARACTER(3), numero_rec VARCHAR, importe_rec MONEY, carnet_rec VARCHAR, autoseguro_rec VARCHAR, ave_rec VARCHAR, devol_tran_rec VARCHAR, observacion_red VARCHAR) RETURNS NUMERIC AS $$
+DECLARE
+	var_numero INTEGER DEFAULT 0;
+BEGIN
+ 	var_numero:=(SELECT COUNT(numero) FROM RECAUDACIONES WHERE numero=numero_rec);
+	
+    IF var_numero = 0 THEN
+    	INSERT INTO RECAUDACIONES(
+	id_alum, id_concepto, id_registro, moneda, numero, importe, carnet, autoseguro, ave, devol_tran, observacion)
+	VALUES (id_alum_rec, id_concepto_rec, id_registro_rec, moneda_rec, numero_rec, importe_rec, carnet_rec, autoseguro_rec, ave_rec, devol_tran_rec, observacion_red);
+    END IF;
+    
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+					--función del trigger
+CREATE OR REPLACE FUNCTION duplicar() RETURNS TRIGGER AS $duplicar$
+DECLARE 
+	--variables
+    var_id_usuario NUMERIC;
+    var_id_facultad NUMERIC;
+    
+    var_id_alum NUMERIC;
+    var_id_concepto NUMERIC;
+    var_id_registro NUMERIC;
+    
+    llamar_funcion VARCHAR;
+BEGIN
+	llamar_funcion:=insert_facultad(NEW.dependencia); --llamada a la función para insertar
+    
+    llamar_funcion:=insert_usuario(NEW.nombre); --llamada a la función para insertar
+    
+    var_id_usuario:=(SELECT id_usuario FROM USUARIO WHERE user_name=NEW.nombre); --obtener id_usuario
+    var_id_facultad:=(SELECT id_facultad FROM FACULTAD WHERE nombre=NEW.dependencia); --obtener id_facultad
+    llamar_funcion:=insert_alumno(var_id_usuario, var_id_facultad, NEW.nombre, NEW.codigo); --llamada a la función para insertar
+    
+    llamar_funcion:=insert_concepto(NEW.concep, NEW.concep_a, NEW.concep_b); --llamada a la función para insertar
+    
+    var_id_alum:=(SELECT id_alum FROM ALUMNO WHERE ape_nom=NEW.nombre); --obtener id_alum
+    var_id_concepto:=(SELECT id_concepto FROM CONCEPTO WHERE concepto=NEW.concep); --obtener id_concepto
+    var_id_registro:=(SELECT id_registro FROM REGISTRO_CARGA ORDER BY id_registro DESC LIMIT 1); --obtener id_registro
+    llamar_funcion:=insert_recaudaciones(var_id_alum, var_id_concepto, var_id_registro, NEW.moneda, NEW.numero, NEW.importe, NEW.carnet, NEW.autoseguro, NEW.ave, NEW.devol_tran, NEW.observacion); --llamada a la función para insertar
+
+    RETURN NULL;
+END;
+$duplicar$ LANGUAGE plpgsql;
+
+					--trigger para duplicar recaudaciones
+CREATE TRIGGER DUPLICAR_RECAUDACIONES AFTER INSERT
+ON RECAUDACIONES_RAW FOR EACH ROW
+EXECUTE PROCEDURE duplicar();
+
+
+
+/*==================================================================
+=========================INSERT=====================================
+==================================================================*/
+
+
+---------------INSERT MODULO------------------
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO1');
+    
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO2');  
+
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO3');
+
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO4');
+
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO5');
+
+INSERT INTO public.modulo(
+	nombre)
+	VALUES ('MODULO6');
+
+
+-------------INSERT TIPO_USUARIO--------------    
+INSERT INTO public.tipo_usuario(
+	nombre_tipo)
+	VALUES ('ALUMNO');
+    
+INSERT INTO public.tipo_usuario(
+	nombre_tipo)
+	VALUES ('ADMINISTRATIVO');
+
+INSERT INTO public.tipo_usuario(
+	nombre_tipo)
+	VALUES ('DIRECTIVA');
+
+INSERT INTO public.tipo_usuario(
+	nombre_tipo)
+	VALUES ('DOCENTE');
+
+
+---------------INSERT ACCEDE------------------
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (1, 2);
+
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (2, 1);
+
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (2, 4);
+
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (3, 1);
+    
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (3, 3);
+
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (3, 4);
+
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (4, 5);
+    
+INSERT INTO public.accede(
+	id_tu, id_mod)
+	VALUES (4, 6);
