@@ -1,0 +1,1102 @@
+/*==================================================================*/
+/*-----------------------CREAR TABLAS-------------------------------*/
+/*---TABLAS: DIRECTIVA, ADMINISTRATIVO, ALUMNO, DOCENTE, PAGOS, USUARIO, PERFIL, MODULO, PERFIL_MODULO---*/
+/*==================================================================*/
+
+
+CREATE SEQUENCE id_direc_seq;
+CREATE TABLE DIRECTIVA(
+  id_direc SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_direc_seq'),
+    id_usuario NUMERIC NOT NULL,
+    nombres VARCHAR(30) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    codigo VARCHAR(8) UNIQUE NOT NULL,
+    DNI CHARACTER(8) UNIQUE NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    telefono VARCHAR(15) NOT NULL
+);
+ALTER SEQUENCE id_direc_seq OWNED BY DIRECTIVA.id_direc;
+
+
+CREATE SEQUENCE id_admin_seq;
+CREATE TABLE ADMINISTRATIVO(
+  id_admin SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_admin_seq'),
+    id_usuario NUMERIC NOT NULL,
+    nombres VARCHAR(30) NOT NULL,
+    apellidos VARCHAR(30) NOT NULL,
+    codigo VARCHAR(8) UNIQUE NOT NULL,
+    DNI CHARACTER(8) UNIQUE NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    telefono VARCHAR(15) NOT NULL
+);
+ALTER SEQUENCE id_admin_seq OWNED BY ADMINISTRATIVO.id_admin;
+
+
+CREATE SEQUENCE id_alum_seq;
+CREATE TABLE ALUMNO(
+  id_alum NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_alum_seq'),
+    id_usuario NUMERIC NOT NULL,
+    id_facultad SMALLINT NOT NULL,
+    ape_nom VARCHAR(300)  UNIQUE NOT NULL,
+    codigo VARCHAR(15),
+    DNI CHAR(8) null
+);
+ALTER SEQUENCE id_alum_seq OWNED BY ALUMNO.id_alum;
+
+
+CREATE SEQUENCE id_rec_seq;
+CREATE TABLE RECAUDACIONES(
+    id_rec NUMERIC NOT NULL DEFAULT NEXTVAL('id_rec_seq'),
+    id_alum NUMERIC NOT NULL,
+    id_concepto SMALLINT NOT NULL,
+    id_registro NUMERIC NOT NULL,
+    id_programa SMALLINT,
+  id_ubicacion INTEGER,
+    cod_alumno VARCHAR(8),
+    moneda CHARACTER(3),
+    numero VARCHAR(10),
+    importe NUMERIC(10,2),
+    carnet VARCHAR(30),
+    autoseguro VARCHAR(30),
+    ave VARCHAR(30),
+    devol_tran VARCHAR(30),
+    observacion VARCHAR(200),
+    fecha DATE,
+    validado BOOLEAN
+);
+ALTER SEQUENCE id_rec_seq OWNED BY RECAUDACIONES.id_rec;
+
+
+CREATE SEQUENCE id_usuario_seq;
+CREATE TABLE USUARIO(
+  id_usuario NUMERIC UNIQUE NOT NULL DEFAULT NEXTVAL('id_usuario_seq'),
+    user_name VARCHAR(300) UNIQUE NOT NULL,
+    pass VARCHAR(50) NOT NULL
+);
+ALTER SEQUENCE id_usuario_seq OWNED BY USUARIO.id_usuario;
+
+
+CREATE SEQUENCE id_perfil_seq;
+CREATE TABLE PERFIL(
+  id_perfil SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_perfil_seq'),
+    nombre_tipo VARCHAR(30) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_perfil_seq OWNED BY PERFIL.id_perfil;
+
+
+CREATE SEQUENCE id_mod_seq;
+CREATE TABLE MODULO(
+  id_mod SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_mod_seq'),
+    nombre VARCHAR(30) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_mod_seq OWNED BY MODULO.id_mod;
+
+
+CREATE TABLE PERFIL_MODULO(
+    id_perfil SMALLINT NOT NULL,
+    id_mod SMALLINT NOT NULL,
+    estado_pm BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+
+CREATE TABLE AUDITORIA(
+  id_admin SMALLINT NOT NULL,
+    id_rec NUMERIC NOT NULL,
+    fecha DATE NOT NULL
+);
+
+CREATE SEQUENCE id_facultad_seq;
+CREATE TABLE FACULTAD(
+  id_facultad SMALLINT NOT NULL DEFAULT NEXTVAL('id_facultad_seq'),
+    nombre VARCHAR(50) UNIQUE NOT NULL
+);
+ALTER SEQUENCE id_facultad_seq OWNED BY FACULTAD.id_facultad;
+
+
+CREATE SEQUENCE id_concepto_seq;
+CREATE TABLE CONCEPTO(
+    id_concepto       SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_concepto_seq'),
+    concepto CHARACTER(6)   UNIQUE NOT NULL,
+    concep_a CHARACTER(3)   NOT NULL,
+    concep_b CHARACTER(3)   NOT NULL,
+  descripcion             VARCHAR(100),
+    id_clase_pagos          INTEGER
+);
+ALTER SEQUENCE id_concepto_seq OWNED BY CONCEPTO.id_concepto;
+
+
+CREATE SEQUENCE id_registro_seq;
+CREATE TABLE REGISTRO_CARGA(
+  id_registro NUMERIC NOT NULL DEFAULT NEXTVAL('id_registro_seq'::regclass),
+    nombre_equipo VARCHAR(70),
+    ip VARCHAR(30),
+    ruta VARCHAR(200),
+    fecha_carga TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ALTER SEQUENCE id_registro_seq OWNED BY REGISTRO_CARGA.id_registro;
+
+
+CREATE SEQUENCE id_raw_seq;
+CREATE TABLE RECAUDACIONES_RAW(
+  id_raw NUMERIC NOT NULL DEFAULT NEXTVAL('id_raw_seq'::regclass),
+    moneda CHARACTER(3),
+    dependencia VARCHAR(50),
+    concep CHARACTER(6),
+    concep_a CHARACTER(3),
+    concep_b CHARACTER(3),
+    numero VARCHAR(10),
+    codigo CHARACTER(15),
+    nombre VARCHAR(300),
+    importe NUMERIC(10,2),
+    carnet VARCHAR(30),
+    autoseguro VARCHAR(30),
+    ave VARCHAR(30),
+    devol_tran VARCHAR(30),
+    observacion VARCHAR(200),
+    fecha VARCHAR(30)
+);
+ALTER SEQUENCE id_raw_seq OWNED BY RECAUDACIONES_RAW.id_raw;
+
+
+CREATE SEQUENCE id_fallidas_seq;
+CREATE TABLE RECAUDACIONES_FALLIDAS(
+  id_fallidas NUMERIC NOT NULL DEFAULT NEXTVAL('id_fallidas_seq'::regclass),
+    id_registro NUMERIC,
+    nombre_archivo VARCHAR(100),
+    descripcion_error VARCHAR(300)
+);
+ALTER SEQUENCE id_fallidas_seq OWNED BY RECAUDACIONES_FALLIDAS.id_fallidas;
+
+
+CREATE TABLE M_ALUMNO(
+  dni_m VARCHAR(8),
+  ape_paterno_m VARCHAR(60),
+  ape_materno_m VARCHAR(60),
+      nombre_m VARCHAR(100)
+);
+
+
+CREATE TABLE ALUMNO_PROGRAMA(
+  cod_alumno VARCHAR(8) NOT NULL,
+  dni_m VARCHAR(8),
+  id_programa SMALLINT,
+  ape_paterno VARCHAR(60) NOT NULL,
+  ape_materno VARCHAR(60),
+  nom_alumno VARCHAR(100) NOT NULL,
+  cod_especialidad VARCHAR(4),
+  cod_tip_ingreso VARCHAR(4),
+  cod_situ VARCHAR(4),
+  cod_perm VARCHAR(4),
+  anio_ingreso VARCHAR(30),
+  des_especialidad VARCHAR(120)
+);
+
+
+CREATE TABLE USUARIO_PERFIL(
+    id_usuario NUMERIC NOT NULL,
+    id_perfil SMALLINT NOT NULL,
+    estado_up BOOLEAN NOT NULL DEFAULT TRUE
+
+);
+
+
+CREATE TABLE USUARIO_MODULO(
+    id_usuario NUMERIC NOT NULL,
+    id_mod SMALLINT NOT NULL,
+    estado_um BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+
+CREATE SEQUENCE id_adm_sis_seq;
+CREATE TABLE ADMINISTADOR_SISTEMAS(
+    id_adm_sis SMALLINT UNIQUE NOT NULL DEFAULT NEXTVAL('id_adm_sis_seq'),
+    id_usuario NUMERIC NOT NULL,
+    nomb_adm_sis VARCHAR(50) NOT NULL,
+    ape_adm_sis VARCHAR(50) NOT NULL,
+    codigo_adm_sis VARCHAR(8) UNIQUE,
+    DNI_adm_sis CHARACTER(8) UNIQUE NOT NULL,
+    email_adm_sis VARCHAR(50) NOT NULL,
+    telefono_adm_sis VARCHAR(15) NOT NULL
+);
+ALTER SEQUENCE id_adm_sis_seq OWNED BY ADMINISTADOR_SISTEMAS.id_adm_sis;
+
+
+--MODULO 5/6 - DISPONIBILIDAD DOCENTE/LEGAJO DOCENTE
+
+CREATE SEQUENCE "id_docente_seq";
+CREATE TABLE DOCENTE (
+  id INT4 NOT NULL DEFAULT nextval('id_docente_seq'),
+  id_usuario NUMERIC,
+  nombres varchar(100),
+  apell_pat varchar(100),
+  apell_mat varchar(100),
+  pais varchar(30),
+  tipo_document varchar(100),
+  nro_document varchar(100),
+  codigo varchar(100),
+  telefono varchar(100),
+  celular varchar(100),
+  email varchar(100) NOT NULL,
+  "linkedInId" varchar(100),
+  -- password varchar(100),
+  genero varchar(1),
+  pag_web varchar(100),
+  foto varchar(100),
+  fecha_nac date,
+  direccion varchar(100),
+  mayor_grado varchar(100),
+  menc_grado varchar(100),
+  universidad varchar(100),
+  pais_grado varchar(100),
+  cv varchar(100),
+  fech_ingreso varchar(100),
+  sunedu_ley varchar(2),
+  nivel_programa varchar(100),
+  categoria varchar(100),
+  regimen_dedicacion varchar(100),
+  horas_semanales varchar(100),
+  investigador varchar(2),
+  dina varchar(2),
+  per_academico varchar(100),
+  observacion varchar(100),
+  "resetPasswordExpires" timestamp with time zone,
+  "resetPasswordToken" varchar(100),
+  "createdAt" timestamp with time zone,
+  "updatedAt" timestamp with time zone,
+  logins integer,
+  profile json,
+  tokens json,
+
+  CONSTRAINT docente_email_key UNIQUE (email),
+  CONSTRAINT "docente_linkedInId_key" UNIQUE ("linkedInId")
+);
+ALTER SEQUENCE id_docente_seq OWNED BY DOCENTE.id;
+CREATE INDEX "linkedInIdIndex" ON docente ("linkedInId");
+
+CREATE SEQUENCE "id_ciclo_seq";
+CREATE TABLE CICLO (
+  id_ciclo INT4 UNIQUE NOT NULL DEFAULT nextval('id_ciclo_seq'),
+  nom_ciclo char(10) NOT NULL
+);
+ALTER SEQUENCE id_ciclo_seq OWNED BY CICLO.id_ciclo;
+
+
+CREATE SEQUENCE "id_preferencia_seq";
+CREATE TABLE PREFERENCIA (
+  id_preferencia INT4 UNIQUE NOT NULL DEFAULT nextval('id_preferencia_seq'),
+  id_docente INT4 NOT NULL,
+  id_curso INT4 NOT NULL,
+  id_ciclo INT4 NOT NULL DEFAULT 1
+);
+ALTER SEQUENCE id_preferencia_seq OWNED BY PREFERENCIA.id_preferencia;
+
+CREATE SEQUENCE "id_disponibilidad_seq";
+
+CREATE TABLE DISPONIBILIDAD (
+  id_disponibilidad INT4 UNIQUE NOT NULL DEFAULT nextval('id_disponibilidad_seq'),
+  id_docente INT4 NOT NULL,
+  id_dia char(1) NOT NULL,
+  hr_inicio char(2) NOT NULL,
+  hr_fin char(2) NOT NULL,
+  tot_hrs char(2) NOT NULL,
+  id_ciclo INT4 NOT NULL DEFAULT 1
+);
+ALTER SEQUENCE id_disponibilidad_seq OWNED BY DISPONIBILIDAD.id_disponibilidad;
+
+CREATE SEQUENCE "id_curso_seq";
+
+CREATE TABLE CURSO (
+  id_curso INT4 UNIQUE NOT NULL DEFAULT nextval('id_curso_seq'),
+  nom_curso varchar(100) NOT NULL,
+  id_programa INT2 NOT NULL,
+  numCiclo char(2) NOT NULL, 
+  numCreditaje char(2) NOT NULL, 
+  TipoCurso char(1) NOT NULL, 
+  PlanEstudios char(4) NOT NULL
+);
+ALTER SEQUENCE id_curso_seq OWNED BY CURSO.id_curso;
+
+CREATE SEQUENCE "id_programa_seq";
+
+CREATE TABLE PROGRAMA (
+  id_programa INT2 UNIQUE NOT NULL DEFAULT nextval('id_programa_seq'),
+  nom_programa varchar(116) NOT NULL,
+  sigla_programa char(10) NOT NULL,
+  id_tip_grado char(2) NOT NULL,
+  vigencia_programa boolean NOT NULL
+);
+ALTER SEQUENCE id_programa_seq OWNED BY PROGRAMA.id_programa;
+
+CREATE TABLE DIA (
+  id_dia char(1) NOT NULL,
+  nom_dia varchar(10) NOT NULL
+);
+
+CREATE SEQUENCE "id_datos_academ_seq";
+
+CREATE TABLE DATOS_ACADEMICOS (
+  id_dat_academicos INT4 UNIQUE NOT NULL DEFAULT nextval('id_datos_academ_seq'),
+  id_docente INT4 NOT NULL,
+  id_tip_grado char(2) NOT NULL,
+  mencion_grado varchar(60) NOT NULL,
+  centro_estudios varchar(60) NOT NULL,
+  pais_estudios varchar(50) NOT NULL
+);
+ALTER SEQUENCE id_datos_academ_seq OWNED BY DATOS_ACADEMICOS.id_dat_academicos;
+
+CREATE TABLE TIPO_GRADO (
+  id_tip_grado char(2) NOT NULL,
+  nom_tip_grado varchar(30)
+);
+
+CREATE TABLE CLASE_PAGOS (
+        id_clase_pagos                     SERIAL,
+        descripcion                        VARCHAR(20)
+);
+
+
+CREATE TABLE CONFIGURACION (
+        id_configuracion      SERIAL,
+        id_clase_pagos       INTEGER,
+        descripcion          VARCHAR(50),
+        estado               CHAR(1)
+);
+
+CREATE TABLE UBICACION (
+  id_ubicacion    SERIAL,
+  descripcion     VARCHAR(20)
+);
+
+
+
+
+/*=========================================================================*/
+/*------------------------------PRIMARY KEY--------------------------------*/
+/*=========================================================================*/
+
+
+ALTER TABLE DIRECTIVA
+ADD PRIMARY KEY (id_direc);
+
+ALTER TABLE ADMINISTRATIVO
+ADD PRIMARY KEY (id_admin);
+
+ALTER TABLE ALUMNO
+ADD PRIMARY KEY (id_alum);
+
+ALTER TABLE RECAUDACIONES
+ADD PRIMARY KEY (id_rec);
+
+ALTER TABLE USUARIO
+ADD PRIMARY KEY (id_usuario);
+
+ALTER TABLE PERFIL
+ADD PRIMARY KEY (id_perfil);
+
+ALTER TABLE MODULO
+ADD PRIMARY KEY (id_mod);
+
+ALTER TABLE PERFIL_MODULO
+ADD CONSTRAINT pk_PERFIL_MODULO
+PRIMARY KEY (id_perfil, id_mod);
+
+ALTER TABLE AUDITORIA
+ADD CONSTRAINT pk_auditoria
+PRIMARY KEY (id_admin, id_rec);
+
+ALTER TABLE FACULTAD
+ADD PRIMARY KEY (id_facultad);
+
+ALTER TABLE CONCEPTO
+ADD PRIMARY KEY (id_concepto);
+
+ALTER TABLE REGISTRO_CARGA
+ADD PRIMARY KEY (id_registro);
+
+ALTER TABLE RECAUDACIONES_RAW
+ADD PRIMARY KEY (id_raw);
+
+ALTER TABLE CLASE_PAGOS
+ADD PRIMARY KEY (id_clase_pagos);
+
+ALTER TABLE CONFIGURACION
+ADD PRIMARY KEY        (id_configuracion);
+
+ALTER TABLE UBICACION
+ADD PRIMARY KEY (id_ubicacion);
+
+ALTER TABLE RECAUDACIONES_FALLIDAS
+ADD PRIMARY KEY (id_fallidas);
+
+ALTER TABLE M_ALUMNO
+ADD PRIMARY KEY (dni_m);
+
+ALTER TABLE ALUMNO_PROGRAMA
+ADD PRIMARY KEY (cod_alumno, id_programa);
+
+ALTER TABLE USUARIO_PERFIL
+ADD CONSTRAINT pk_usuario_perfil
+PRIMARY KEY (id_usuario, id_perfil);
+
+ALTER TABLE USUARIO_MODULO
+ADD CONSTRAINT pk_usuario_modulo
+PRIMARY KEY (id_usuario, id_mod);
+
+ALTER TABLE ADMINISTADOR_SISTEMAS
+ADD CONSTRAINT pk_administrador_sistemas
+PRIMARY KEY (id_adm_sis);
+
+--MODULO 5/6
+
+ALTER TABLE DOCENTE
+ADD PRIMARY KEY (id);
+
+ALTER TABLE DATOS_ACADEMICOS
+ADD PRIMARY KEY (id_dat_academicos);
+
+ALTER TABLE DIA
+ADD PRIMARY KEY (id_dia);
+
+ALTER TABLE DISPONIBILIDAD
+ADD PRIMARY KEY (id_disponibilidad);
+
+ALTER TABLE PREFERENCIA
+ADD PRIMARY KEY (id_preferencia);
+
+ALTER TABLE CURSO
+ADD PRIMARY KEY (id_curso);
+
+ALTER TABLE PROGRAMA
+ADD PRIMARY KEY (id_programa);
+
+ALTER TABLE TIPO_GRADO
+ADD PRIMARY KEY (id_tip_grado);
+
+ALTER TABLE CICLO
+ADD PRIMARY KEY (id_ciclo);
+
+
+/*===========================================================================*/
+/*------------------------------FOREIGN KEY----------------------------------*/
+/*===========================================================================*/
+
+
+ALTER TABLE DIRECTIVA
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE ADMINISTRATIVO
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE ALUMNO
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_alum) REFERENCES ALUMNO(id_alum);
+
+ALTER TABLE PERFIL_MODULO
+ADD FOREIGN KEY (id_perfil) REFERENCES PERFIL(id_perfil);
+
+ALTER TABLE PERFIL_MODULO
+ADD FOREIGN KEY (id_mod) REFERENCES MODULO(id_mod);
+
+ALTER TABLE DOCENTE
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE AUDITORIA
+ADD FOREIGN KEY (id_admin) REFERENCES ADMINISTRATIVO(id_admin);
+
+ALTER TABLE AUDITORIA
+ADD FOREIGN KEY (id_rec) REFERENCES RECAUDACIONES(id_rec);
+
+ALTER TABLE ALUMNO
+ADD FOREIGN KEY (id_facultad) REFERENCES FACULTAD(id_facultad);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_concepto) REFERENCES CONCEPTO(id_concepto);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_registro) REFERENCES REGISTRO_CARGA(id_registro);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (id_ubicacion) REFERENCES UBICACION(id_ubicacion);
+  
+ALTER TABLE CONCEPTO
+ADD FOREIGN KEY (id_clase_pagos) REFERENCES CLASE_PAGOS (id_clase_pagos);
+
+ALTER TABLE CONFIGURACION
+ADD FOREIGN KEY (id_clase_pagos) REFERENCES CLASE_PAGOS (id_clase_pagos);
+
+ALTER TABLE RECAUDACIONES_FALLIDAS
+ADD FOREIGN KEY (id_registro) REFERENCES REGISTRO_CARGA(id_registro);
+
+ALTER TABLE ALUMNO_PROGRAMA
+ADD FOREIGN KEY (id_programa) REFERENCES PROGRAMA(id_programa);
+
+ALTER TABLE ALUMNO_PROGRAMA
+ADD FOREIGN KEY (dni_m) REFERENCES M_ALUMNO(dni_m);
+
+ALTER TABLE RECAUDACIONES
+ADD FOREIGN KEY (cod_alumno, id_programa) REFERENCES ALUMNO_PROGRAMA(cod_alumno, id_programa);
+
+ALTER TABLE USUARIO_PERFIL
+ADD FOREIGN KEY (id_perfil) REFERENCES PERFIL(id_perfil);
+
+ALTER TABLE USUARIO_PERFIL
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE USUARIO_MODULO
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+ALTER TABLE USUARIO_MODULO
+ADD FOREIGN KEY (id_mod) REFERENCES MODULO(id_mod);
+
+ALTER TABLE ADMINISTADOR_SISTEMAS
+ADD FOREIGN KEY (id_usuario) REFERENCES USUARIO(id_usuario);
+
+
+--MODULO 5
+
+ALTER TABLE PREFERENCIA
+ADD CONSTRAINT fk_PREFERENCIA_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id);
+
+ALTER TABLE PREFERENCIA
+ADD CONSTRAINT fk_PREFERENCIA_to_CURSO FOREIGN KEY (id_curso) REFERENCES CURSO(id_curso);
+
+ALTER TABLE PREFERENCIA
+ADD CONSTRAINT fk_PREFERENCIA_to_CICLO FOREIGN KEY (id_ciclo) REFERENCES CICLO(id_ciclo);
+
+ALTER TABLE DISPONIBILIDAD
+ADD CONSTRAINT fk_DISPONIBILIDAD_to_CICLO FOREIGN KEY (id_ciclo) REFERENCES CICLO(id_ciclo);
+
+ALTER TABLE DISPONIBILIDAD
+ADD CONSTRAINT fk_DISPONIBILIDAD_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id);
+
+ALTER TABLE DISPONIBILIDAD
+ADD CONSTRAINT fk_DISPONIBILIDAD_to_DIA FOREIGN KEY (id_dia) REFERENCES DIA(id_dia);
+
+ALTER TABLE CURSO
+ADD CONSTRAINT fk_CURSO_to_PROGRAMA FOREIGN KEY (id_programa) REFERENCES PROGRAMA(id_programa);
+
+ALTER TABLE DATOS_ACADEMICOS
+ADD CONSTRAINT fk_DATOS_ACADEMICOS_to_DOCENTE FOREIGN KEY (id_docente) REFERENCES DOCENTE(id);
+
+ALTER TABLE DATOS_ACADEMICOS
+ADD CONSTRAINT fK_DATOS_ACADEMICOS_to_TIPO_GRADO FOREIGN KEY (id_tip_grado) REFERENCES TIPO_GRADO(id_tip_grado);
+
+ALTER TABLE PROGRAMA
+ADD CONSTRAINT fK_PROGRAMA_to_TIPO_GRADO FOREIGN KEY (id_tip_grado) REFERENCES TIPO_GRADO(id_tip_grado);
+
+/*====================================================================================*/
+/*--------------------------------TRIGGERS AND FUNCTIONS------------------------------*/
+/*====================================================================================*/
+
+          --funci?n que verifica e inserta en FACULTAD
+CREATE OR REPLACE FUNCTION insert_facultad(nombre_facultad varchar) RETURNS NUMERIC AS $$
+DECLARE
+  var_nombre INTEGER DEFAULT 0;
+BEGIN
+  var_nombre:=(select COUNT(nombre) from FACULTAD WHERE nombre=nombre_facultad);
+
+    IF var_nombre = 0 THEN
+      INSERT INTO FACULTAD(nombre) VALUES(nombre_facultad);
+    END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n que verifica e inserta en USUARIO_PERFIL
+CREATE OR REPLACE FUNCTION insert_usuario_perfil(id_usuario_in NUMERIC) RETURNS NUMERIC AS $$
+DECLARE
+  var_usuario_perfil INTEGER DEFAULT 0;
+BEGIN
+  var_usuario_perfil:=(select COUNT(*) from USUARIO_PERFIL WHERE id_usuario=id_usuario_in AND id_perfil=1);
+
+    IF var_usuario_perfil = 0 THEN
+      INSERT INTO USUARIO_PERFIL(id_usuario, id_perfil) VALUES(id_usuario_in, 1);
+    END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n que verifica e inserta en USUARIO
+CREATE OR REPLACE FUNCTION insert_usuario(user_name_usuario varchar) RETURNS NUMERIC AS $$
+DECLARE
+  var_user_name INTEGER DEFAULT 0;
+BEGIN
+  var_user_name:=(select COUNT(user_name) from USUARIO WHERE user_name=user_name_usuario);
+
+    IF var_user_name = 0 THEN
+      INSERT INTO USUARIO(user_name, pass) VALUES(user_name_usuario,'');
+    END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n que verifica e inserta en ALUMNO
+CREATE OR REPLACE FUNCTION insert_alumno(id_usuario_alumno NUMERIC, id_facultad_alumno NUMERIC, ape_nom_alumno VARCHAR, codido_alumno CHARACTER(8)) RETURNS NUMERIC AS $$
+DECLARE
+  var_ape_nom INTEGER DEFAULT 0;
+BEGIN
+  var_ape_nom:=(select COUNT(ape_nom) from ALUMNO WHERE ape_nom=ape_nom_alumno);
+
+    IF var_ape_nom = 0 THEN
+      INSERT INTO ALUMNO(id_usuario, id_facultad, ape_nom, codigo) VALUES(id_usuario_alumno, id_facultad_alumno, ape_nom_alumno, codido_alumno);
+    END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n que verifica e inserta en CONCEPTO
+CREATE OR REPLACE FUNCTION insert_concepto(concepto_concepto CHARACTER(6), concep_a_concepto CHARACTER(3), concep_b_concepto CHARACTER(3)) RETURNS NUMERIC AS $$
+DECLARE
+  var_concepto INTEGER DEFAULT 0;
+BEGIN
+  var_concepto:=(SELECT COUNT(concepto) FROM CONCEPTO WHERE concepto=concepto_concepto);
+
+    IF var_concepto = 0 THEN
+      INSERT INTO CONCEPTO(concepto, concep_a, concep_b) VALUES(concepto_concepto, concep_a_concepto, concep_b_concepto);
+    END IF;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n que verifica e inserta en RECAUDACIONES
+CREATE OR REPLACE FUNCTION insert_recaudaciones(id_alum_rec NUMERIC, id_concepto_rec NUMERIC, id_registro_rec NUMERIC, moneda_rec CHARACTER(3), numero_rec VARCHAR, importe_rec NUMERIC(10,2), carnet_rec VARCHAR, autoseguro_rec VARCHAR, ave_rec VARCHAR, devol_tran_rec VARCHAR, observacion_red VARCHAR) RETURNS NUMERIC AS $$
+DECLARE
+  
+BEGIN
+    
+    INSERT INTO RECAUDACIONES(
+  id_alum, id_concepto, id_registro, moneda, numero, importe, carnet, autoseguro, ave, devol_tran, observacion)
+  VALUES (id_alum_rec, id_concepto_rec, id_registro_rec, moneda_rec, numero_rec, importe_rec, carnet_rec, autoseguro_rec, ave_rec, devol_tran_rec, observacion_red);
+    
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n del trigger
+CREATE OR REPLACE FUNCTION duplicar() RETURNS TRIGGER AS $duplicar$
+DECLARE
+  --variables
+    var_id_usuario NUMERIC;
+    var_id_facultad NUMERIC;
+
+    var_id_alum NUMERIC;
+    var_id_concepto NUMERIC;
+    var_id_registro NUMERIC;
+
+    llamar_funcion VARCHAR;
+BEGIN
+  llamar_funcion:=insert_facultad(NEW.dependencia); --llamada a la funci?n para insertar
+
+    llamar_funcion:=insert_usuario(NEW.nombre); --llamada a la funci?n para insertar
+
+    var_id_usuario:=(SELECT id_usuario FROM USUARIO WHERE user_name=NEW.nombre); --obtener id_usuario
+    var_id_facultad:=(SELECT id_facultad FROM FACULTAD WHERE nombre=NEW.dependencia); --obtener id_facultad
+    
+    llamar_funcion:=insert_usuario_perfil(var_id_usuario); --llamada a la funci?n para insertar
+    
+    llamar_funcion:=insert_alumno(var_id_usuario, var_id_facultad, NEW.nombre, NEW.codigo); --llamada a la funci?n para insertar
+
+    llamar_funcion:=insert_concepto(NEW.concep, NEW.concep_a, NEW.concep_b); --llamada a la funci?n para insertar
+
+    var_id_alum:=(SELECT id_alum FROM ALUMNO WHERE ape_nom=NEW.nombre); --obtener id_alum
+    var_id_concepto:=(SELECT id_concepto FROM CONCEPTO WHERE concepto=NEW.concep); --obtener id_concepto
+    var_id_registro:=(SELECT id_registro FROM REGISTRO_CARGA ORDER BY id_registro DESC LIMIT 1); --obtener id_registro
+    llamar_funcion:=insert_recaudaciones(var_id_alum, var_id_concepto, var_id_registro, NEW.moneda, NEW.numero, NEW.importe, NEW.carnet, NEW.autoseguro, NEW.ave, NEW.devol_tran, NEW.observacion); --llamada a la funci?n para insertar
+
+    RETURN NULL;
+END;
+$duplicar$ LANGUAGE plpgsql;
+
+          --trigger para duplicar recaudaciones
+CREATE TRIGGER DUPLICAR_RECAUDACIONES AFTER INSERT
+ON RECAUDACIONES_RAW FOR EACH ROW
+EXECUTE PROCEDURE duplicar();
+
+
+
+          --funci?n que actualiza RECAUDACIONES_FALLIDAS
+CREATE OR REPLACE FUNCTION actualizar_recaudaciones_fallidas(id_registro_fun NUMERIC, nombre_archivo_fun VARCHAR, descripcion_error_fun VARCHAR) RETURNS NUMERIC AS $$
+DECLARE
+  llamar_funcion VARCHAR;
+BEGIN
+  
+  UPDATE RECAUDACIONES_FALLIDAS SET id_registro = id_registro_fun WHERE nombre_archivo = nombre_archivo_fun AND descripcion_error = descripcion_error_fun;
+
+RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+          --funci?n del trigger ASIGNAR_RECAUDACIONES_FALLIDAS
+CREATE OR REPLACE FUNCTION asignar() RETURNS TRIGGER AS $asignar$
+DECLARE
+  --variables
+    var_id_registro NUMERIC;
+
+    llamar_funcion VARCHAR;
+BEGIN
+  var_id_registro:=(SELECT id_registro FROM REGISTRO_CARGA ORDER BY id_registro DESC LIMIT 1); --obtener id_registro
+
+    llamar_funcion:=actualizar_recaudaciones_fallidas(var_id_registro, NEW.nombre_archivo, NEW.descripcion_error); --llamada a la funci?n para actualizar
+
+    RETURN NULL;
+END;
+$asignar$ LANGUAGE plpgsql;
+
+          --trigger para asignar id_registro a RECAUDACIONES_FALLIDAS
+CREATE TRIGGER ASIGNAR_RECAUDACIONES_FALLIDAS AFTER INSERT
+ON RECAUDACIONES_FALLIDAS FOR EACH ROW
+EXECUTE PROCEDURE asignar();
+
+/*==================================================================
+================================INSERT==============================
+==================================================================*/
+
+
+---------------INSERT MODULO------------------
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO1');
+
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO2');
+
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO3');
+
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO4');
+
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO5');
+
+INSERT INTO public.modulo(
+  nombre)
+  VALUES ('MODULO6');
+
+
+-------------INSERT PERFIL--------------
+INSERT INTO public.PERFIL(
+  nombre_tipo)
+  VALUES ('ALUMNO');
+
+INSERT INTO public.PERFIL(
+  nombre_tipo)
+  VALUES ('ADMINISTRATIVO');
+
+INSERT INTO public.PERFIL(
+  nombre_tipo)
+  VALUES ('DIRECTIVA');
+
+INSERT INTO public.PERFIL(
+  nombre_tipo)
+  VALUES ('DOCENTE');
+
+INSERT INTO public.PERFIL(
+  nombre_tipo)
+  VALUES ('ADMINISTRADOR DE SISTEMA');
+
+---------------INSERT PERFIL_MODULO------------------
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (1, 2);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (2, 1);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (2, 4);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (3, 1);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (3, 3);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (3, 4);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (4, 5);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES (4, 6);
+
+INSERT INTO public.PERFIL_MODULO(
+  id_perfil, id_mod)
+  VALUES
+  (5, 1),
+  (5, 2),
+  (5, 3),
+  (5, 4),
+  (5, 5),
+  (5, 6);
+
+  
+---------------INSERT TIPO_GRADO------------------
+
+insert into tipo_grado (id_tip_grado, nom_tip_grado) values
+('01',  'Titulo'),
+('02',  'Licenciatura'),
+('03',  'Maestria'),
+('04',  'Especialidad'),
+('05',  'Doctorado'),
+('06',  'Diplomatura');
+
+---------------INSERT PROGRAMA------------------
+
+insert into programa (id_programa, nom_programa, sigla_programa,id_tip_grado,vigencia_programa) values
+(2, 'DIPLOMATURA: ESPECIALIZACION EN AUDITORIA Y SEGURIDAD DE TECNOLOGIA DE INFORMACION' , 'DEASTI' , '06' ,'t'),
+(1, 'DIPLOMATURA: GESTION PUBLICA Y GOBIERNO ELECTRONICICO' , 'DGPGE' , '06' ,'t'), 
+(3, 'DIPLOMATURA: GERENCIA DE PROYECTOS DE TECNOLOGIA DE INFORMACION' , 'DGPTI' ,'06'  ,'t'),
+(4, 'MAESTRIA EN INGENIERIA DE SISTEMAS E INFORMATICA MENCION : INGENIERIA DE SOFTWARE' , 'MISW' , '03' ,'t'), 
+(6, 'MAESTRIA PROFESIONAL EN GOBIERNO DE TECNOLOGIAS DE INFORMACION' , 'MGTI' , '03' ,'t'),
+(5, 'MAESTRIA EN INGENIERIA DE SISTEMAS E INFORMATICA MENCION: GESTION DE TECNOLOGIA DE INFORMACION Y CONOCIMIENTO' , 'MGTIC' , '03' ,'t'),
+(7, 'MAESTRIA EN GESTION DE LA INFORMACION Y DEL CONOCIMIENTO' , 'MGTI' , '03' ,'t'),
+(8, 'DOCTORADO EN INGENIERIA DE SISTEMAS E INFORMATICA ' , 'DISI' , '05' ,'t');
+
+---------------INSERT CURSO------------------
+
+insert into curso (id_curso, nom_curso, id_programa, numCiclo, numCreditaje, TipoCurso, PlanEstudios) values
+(72070, 'GESTION DE DATOS  ','8' ,'0'   ,'2 '  ,'E' ,'2017'),
+(72071, 'ESTANDARES Y NORMAS EN EL TRATAMIENTO DE LA INFORMACION Y LA DOCUMENTACION  ','8' ,'0'   ,'2 '  ,'E' ,'2017'),
+(72072, 'CALIDAD DE LOS PRODUCTOS Y DE LOS SERVICIOS DE LA INFORMACION ','8' ,'0'   ,'2 '  ,'E' ,'2017'),
+(73046, 'INTELIGENCIA DE NEGOCIOS  ','6' ,'4'   ,'4 '  ,'O' ,'2017'),
+(73047, 'SEMINARIO DE TESIS II ','6' ,'4'   ,'10'  ,'O' ,'2017'),
+(73018, 'GESTION DE SERVICIOS DE TI  ','6' ,'1'   ,'4 '  ,'O' ,'2017'),
+(73025, 'GOBIERNO DE TI  ','6' ,'2'   ,'4 '  ,'O' ,'2017'),
+(73016, 'DESARROLLO DE HABILIDADES DIRECTIVAS  ','6' ,'1'   ,'4 '  ,'O' ,'2017'),
+(73017, 'PLANEAMIENTO ESTRATEGICO  ','6' ,'1'   ,'4 '  ,'O' ,'2017'),
+(73036, 'SEMINARIO DE TESIS I  ','6' ,'3'   ,'9 '  ,'O' ,'2017'),
+(73015, 'MARCOS DE TRABAJO DE TECNOLOGIAS DE INFORMACION ','6' ,'1'   ,'4 '  ,'O' ,'2017'),
+(73027, 'GESTION DE SEGURIDAD RIESGOS Y CONTINUIDAD DE TI  ','6' ,'2'   ,'4 '  ,'O' ,'2017'),
+(73026, 'ARQUITECTURA EMPRESARIAL  ','6' ,'2'   ,'4 '  ,'O' ,'2017'),
+(73034, 'GESTION DEL CONOCIMIENTO E INNOVACION DE TI ','6' ,'3'   ,'4 '  ,'O' ,'2017'),
+(73028, 'METODOLOGIA DE TESIS  ','6' ,'2'   ,'5 '  ,'O' ,'2017'),
+(73045, 'IMPLEMENTACION DE GOBIERNO DE TI  ','6' ,'4'   ,'4 '  ,'O' ,'2017'),
+(73035, 'GESTION DE PROYECTOS DE TI  ','6' ,'3'   ,'4 '  ,'O' ,'2017'),
+(91014, 'EPISTEMOLOGIA EN INGENIERIA DE SISTEMAS E INFORMATICA ','8' ,'1'   ,'3 '  ,'O' ,'2017'),
+(91047, 'PROYECTO DE INVESTIGACION ','8' ,'4'   ,'2 '  ,'O' ,'2017'),
+(72016, 'TECNICAS DOCUMENTALES ','7' ,'1'   ,'3 '  ,'O' ,'2017'),
+(72034, 'GESTION DE LA INNOVACION EMPRESARIAL  ','7' ,'3'   ,'3 '  ,'O' ,'2017'),
+(72042, 'SEMINARIO DE TESIS II ','7' ,'4'   ,'10'  ,'O' ,'2017'),
+(72033, 'REPOSITORIOS DIGITALES  ','7' ,'3'   ,'2 '  ,'O' ,'2017'),
+(72041, 'INTELIGENCIA DE NEGOCIOS  ','7' ,'4'   ,'3 '  ,'O' ,'2017'),
+(72017, 'BUSQUEDA Y VIGILIA DOCUMENTAL\n ','7' ,'1'   ,'3 '  ,'O' ,'2017'),
+(72018, 'TRATAMIENTO DEL DOCUMENTO ','7' ,'1'   ,'2 '  ,'O' ,'2017'),
+(72019, 'GESTION DE LA INFORMACION Y DEL CONOCIMIENTO  ','7' ,'1'   ,'4 '  ,'O' ,'2017'),
+(72014, 'SISTEMAS DE INFORMACION ','7' ,'1'   ,'2 '  ,'O' ,'2017'),
+(72015, 'ORGANIZACION DE LOS SERVIDORES DE INFORMACION ','7' ,'1'   ,'3 '  ,'O' ,'2017'),
+(72022, 'GESTION DE CONTENIDOS EN PLATAFORMA COLABORATIVAS Y VIRTUALES ','7' ,'2'   ,'4 '  ,'O' ,'2017'),
+(72023, 'GESTION ELECTRONICO DE DOCUMENTOS ','7' ,'2'   ,'3 '  ,'O' ,'2017'),
+(72024, 'ARQUITECTURA DE LA INFORMACION  ','7' ,'2'   ,'3 '  ,'O' ,'2017'),
+(72021, 'DISEÑO Y GESTION DE PROYECTOS ','7' ,'2'   ,'2 '  ,'O' ,'2017'),
+(72025, 'METODOLOGIA DE TESIS  ','7' ,'2'   ,'6 '  ,'O' ,'2017'),
+(72036, 'SEMINARIO DE TESIS I  ','7' ,'3'   ,'8 '  ,'O' ,'2017'),
+(72040, 'GESTION DE TICs Y SEGURIDAD DE LA INFORMACION ','7' ,'4'   ,'4 '  ,'O' ,'2017'),
+(71441, 'INTELIGENCIA DE NEGOCIOS  ','5' ,'4'   ,'4 '  ,'O' ,'2017'),
+(71435, 'SEMINARIO DE INVESTIGACION I  ','5' ,'3'   ,'8 '  ,'O' ,'2017'),
+(71001, 'ARQUITECTURA DE SOFTWARE  ','4' ,'2'   ,'4 '  ,'O' ,'2017'),
+(71138, 'GESTION DE LA CONFIGURACION Y MANTENIMIENTO ','4' ,'3'   ,'3 '  ,'O' ,'2017'),
+(71137, 'CALIDAD DEL PROCESO DE SOFTWARE ','4' ,'3'   ,'4 '  ,'O' ,'2017'),
+(71144, 'DESARROLLO DE SOFTWARE PARA DISPOSITIVOS  ','4' ,'4'   ,'4 '  ,'O' ,'2017'),
+(71119, 'GESTION DE PROYECTOS DE SOFTWARE  ','4' ,'1'   ,'4 '  ,'O' ,'2017'),
+(71113, 'AMBIENTES DE DESARROLLO SOFTWARE  ','4' ,'1'   ,'4 '  ,'O' ,'2017'),
+(71123, 'DISEÑO Y CONSTRUCCION DE SOFTWARE ','4' ,'2'   ,'4 '  ,'O' ,'2017'),
+(71121, 'METODOLOGIA DE INVESTIGACION  ','4' ,'2'   ,'6 '  ,'O' ,'2017'),
+(71442, 'SEMINARIO DE INVESTIGACION II ','5' ,'4'   ,'10'  ,'O' ,'2017'),
+(71145, 'FABRICA DE SOFTWARE ','4' ,'4'   ,'3 '  ,'O' ,'2017'),
+(71139, 'SEMINARIO DE INVESTIGACION I  ','4' ,'3'   ,'8 '  ,'O' ,'2017'),
+(16,  'TALLER DE HERRAMIENTAS PARA GESTION DE PROYECTOS  ','3' ,'2'   ,'4 '  ,'O' ,'2017'),
+(18,  'TALLER DE EXAMENES DE CERTIFICACION ','3' ,'2'   ,'4 '  ,'O' ,'2017'),
+(17,  'GESTION DE PROYECTOS AGILES ','3' ,'2'   ,'4'  ,'O' ,'2017'),
+(12,  'TALLER DE EXAMENES DE CERTIFICACION ','2' ,'2'   ,'4'  ,'O' ,'2017'),
+(11,  'AUDITORIA DE GOBIERNO Y GESTION DE TI ','2' ,'2'   ,'4'  ,'O' ,'2017'),
+(14,  'GESTION DE PROYECTOS II ','3' ,'1'   ,'4 '  ,'O' ,'2017'),
+(13,  'GESTION DE PROYECTOS I  ','3' ,'1'   ,'4 '  ,'O' ,'2017'),
+(15,  'HABILIDADES BLANDAS EN LA GESTION DE PROYECTOS  ','3' ,'1'   ,'4'  ,'O' ,'2017'),
+(2, 'GOBIERNO ELECTRONICO/GOBIERNO MOVIL ','1' ,'1'   ,'4'  ,'O' ,'2017'),
+(1, 'GESTION PUBLICA I ','1' ,'1'   ,'4'  ,'O' ,'2017'),
+(4, 'INTEROPERABILIDAD II  ','1' ,'2'   ,'4'  ,'O' ,'2017'),
+(3, 'INTEROPERABILIDAD I','1' ,'1 '  ,'4' ,'O','2017'),
+(6, 'GOBIERNO ABIERTO/GOBIERNO INTELIGENTE ','1' ,'2'   ,'4'  ,'O' ,'2017'),
+(5, 'GESTION PUBLICA II  ','1' ,'2'   ,'4'  ,'O' ,'2017'),
+(8, 'AUDITORIA DE TECNOLOGIAS Y SISTEMATICA DE INFORMACION ','2' ,'1'   ,'4'  ,'O' ,'2017'),
+(7, 'GOBERNANZA Y GESTION DE LA SEGURIDAD DE LA INFORMACION ISO 27001  ','2' ,'1'   ,'4'  ,'O' ,'2017'),
+(10,'  GESTION DE RIESGOS DE SEGURIDAD DE LA INFORMACION ','2' ,'2'   ,'4 '  ,'O' ,'2017'),
+(9, 'COBIT ','2' ,'1'   ,'4 '  ,'O' ,'2017'),
+(91052, 'SEMINARIO DE INVESTIGACION V  ','8' ,'5'   ,'12'  ,'O' ,'2017'),
+(91036, 'MENTORIA  ','8' ,'3'   ,'2 '  ,'O' ,'2017'),
+(91061, 'EMPRENDIMIENTO E INNOVACION ','8' ,'6'   ,'2 '  ,'O' ,'2017'),
+(91062, 'SEMINARIO DE INVESTIGACION VI ','8' ,'6'   ,'12'  ,'O' ,'2017'),
+(91051, 'TRANSFERENCIA TECNOLOGICA ','8' ,'5'   ,'2 '  ,'O' ,'2017'),
+(91046, 'TOPICOS AVANZADOS EN GOBIERNO, GESTION Y PLATAFORMA EN TIC  ','8' ,'4'   ,'3 '  ,'O' ,'2017'),
+(91028, 'SEMINARIO DE INVESTIGACION II\n ','8' ,'2'   ,'8 '  ,'O' ,'2017'),
+(91048, 'SEMINARIO DE INVESTIGACION IV ','8' ,'4'   ,'10'  ,'O' ,'2017'),
+(91026, 'TOPICOS AVANZADOS EN SISTEMAS COGNITIVOS  ','8' ,'2'   ,'3 '  ,'O' ,'2017'),
+(91027, 'CONDUCTA RESPONSABLE EN INVESTIGACION ','8' ,'2'   ,'2 '  ,'O' ,'2017'),
+(91017, 'SEMINARIO DE INVESTIGACION I  ','8' ,'1'   ,'8 '  ,'O' ,'2017'),
+(91025, 'ESTADISTICA APLICADA A LA INVESTIGACION ','8' ,'2'   ,'3 '  ,'O' ,'2017'),
+(91035, 'TOPICOS AVANZADOS EN CIENCIA DE DATOS ','8' ,'3'   ,'3 '  ,'O' ,'2017'),
+(91037, 'SEMINARIO DE INVESTIGACION III  ','8' ,'3'   ,'10'  ,'O' ,'2017'),
+(91016, 'DOCENCIA E INVESTIGACION  ','8' ,'1'   ,'2 '  ,'O' ,'2017'),
+(91015, 'TOPICOS AVANZADOS EN COMPUTACION  ','8' ,'1'   ,'2 '  ,'O' ,'2017'),
+(91070, 'BIG DATA  ','8' ,'0'   ,'3 '  ,'E' ,'2017'),
+(91071, 'TECNOLOGICA CLOUD COMPUTING ','8' ,'0'   ,'3 '  ,'E' ,'2017'),
+(91072, 'MODELOS DE GOBIERNO Y GESTION DE TI ','8' ,'0'   ,'3 '  ,'E' ,'2017'),
+(91073, 'INTELIGENCIA DE NEGOCIOS  ','8' ,'0'   ,'3 '  ,'E' ,'2017'),
+(72035, 'DIRECCION Y LIDERAZGO ORGANIZACIONAL  ','7' ,'3'   ,'3 '  ,'O' ,'2017'),
+(73070, 'PLANEAMIENTO DE RECURSOS EMPRESARIALES  ','6' ,'0'   ,'2 '  ,'E' ,'2017'),
+(73071, 'GESTION INTEGRAL CALIDAD TI ','6' ,'0'   ,'2 '  ,'E' ,'2017'),
+(73072, 'TERCERIZACION DE TI ','6' ,'0'   ,'2 '  ,'E' ,'2017'),
+(73073, 'GESTION DE INVERSION DE TI  ','6' ,'0'   ,'2 '  ,'E' ,'2017'),
+(73074, 'ARQUITECTURA Y DISEÑO DE SOFTWARE ','6' ,'0'   ,'2 '  ,'E' ,'2017'),
+(71434, 'VALOR ESTRATEGICA DE TI ','5' ,'3'   ,'4 '  ,'O' ,'2017'),
+(71433, 'SEGURIDAD DE LA INFORMACION ','5' ,'3'   ,'4 '  ,'O' ,'2017'),
+(71427, 'METODOLOGIA DE INVESTIGACION ', '5' ,'2',   '6'   ,'O' ,'2017'),
+(71426, 'ADMINISTRACION ESTRATEGICA ', '5' ,'2',   '4'   ,'O' ,'2017'),
+(71111, 'PROCESO DE INGENIERIA DE SOFTWARE', '4' ,'1',   '4'   ,'O' ,'2017'),
+(71112, 'INGENIERIA DE REQUISITOS ', '4' ,'1',   '4'   ,'O' ,'2017'),
+(71122, 'BIG DATA ', '4' ,'2',   '4'   ,'O' ,'2017'),
+(71146, 'SEMINARIO DE INVESTIGACION II', '4' ,'4',   '1','O' ,'2017'),
+(71425, 'GOBIERNO DE TI ', '5' ,'2',   '4'   ,'O' ,'2017'),
+(71424, 'INTEGRACION DE SI/TI ', '5' ,'2',   '4'   ,'O' ,'2017'),
+(71411, 'GESTION DE INFORMACION Y CONOCIMIENTO', '5' ,'1',   '4'   ,'O' ,'2017'),
+(71415, 'LIDERAZGO CONFLICTIVO Y NEGOCIACION', '5' ,'1',   '4'   ,'O' ,'2017'),
+(71414, 'GESTION Y EVALUACION DE PROYECTOS DE TI', '5' ,'1',   '4'   ,'O' ,'2017'),
+(71010, 'TECNOLOGIAS DE INFORMACION Y COMUNICACIONES', '5' ,'1',   '4'   ,'O' ,'2017'),
+(71195, 'METRICAS DE SOFTWARE ', '4' ,'0',   '3'   ,'E' ,'2017'),
+(71196, 'INGENIERIA DE SOFTWARE BASADO EN WEB', '4' ,'0',   '3'   ,'E' ,'2017'),
+(71197, 'GESTION DE PROCESOS DE NEGOCIO ', '4' ,'0',   '3'   ,'E' ,'2017'),
+(71198, 'TECNOLOGIA CLOUD COMPUTING',  '4' ,'0',   '3'   ,'E' ,'2017'),
+(71475, 'GESTION DE LA CALIDAD DE SI/TI ', '5' ,'0',   '4'   ,'E' ,'2017'),
+(71476, 'PROCESO DE  INGENIERIA DE SOFTWARE',  '5', '0',   '4'   ,'E', '2017'),
+(71477, 'GESTION DE SERVICIOS DE TI', ' 5', '0',   '4',   'E' ,'2017'),
+(71478, 'MODELOS DE GOBIERNO Y GESTION DE TI', '5', '0',   '4',   'E' ,'2017');
+
+---------------INSERT DIA------------------
+
+insert into dia (id_dia, nom_dia) values
+(1, 'Lunes'),
+(2, 'Martes'),
+(3, 'Miercoles'),
+(4, 'Jueves'),
+(5, 'Viernes'),
+(6, 'Sabado'),
+(7, 'Domingo');
+
+--------------INSERT CICLO----------------------------
+
+INSERT INTO CICLO(id_ciclo, nom_ciclo) VALUES
+( 1 , '2018-I');
+
+---------------INSERT CLASE_PAGOS------------------
+
+INSERT INTO CLASE_PAGOS (descripcion) VALUES
+('Pregrado'),
+('Posgrado');
+
+---------------INSERT UBICACION------------------
+
+
+INSERT INTO UBICACION (descripcion) VALUES
+('original'),
+('copia'),
+('no se encontro');
+
+
+---------------INSERT CONCEPTO------------------
+
+
+INSERT INTO CONCEPTO (concepto, concep_a, concep_b, descripcion, id_clase_pagos) VALUES
+(210010,210,010,'MAESTRIA PROFESIONAL EN GOBIERNO DE TECNOLOGIAS DE INFORMACION-MATRICULA(POSGRADO)',2),
+(210011,210,011,'MAESTRIA EN GESTION DE LA INFORMACION Y DEL CONOCIMIENTO-MATRICULA(POSGRADO)',2),
+(210012,210,012,'DOCTORADO EN ING. DE SISTEMAS-MATRICULA(POSGRADO)',2),
+(210013,210,013,'DOCTORADO EN ING. DE SISTEMAS-PENSION(POSGRADO)',2),
+(210014,210,014,'SEGUNDA, TERCERA Y CUARTA MATRICULA CON CURSO DESAPROBADO(POSGRADO)',2),
+(210023,210,023,'DISERTACION DE TESIS-MATRICULA Y PENSION(POSGRADO)',2),
+(210024,210,024,'DIPLOMATURA AUDITORIA Y SEGURIDAD DE TECNOLOGIA-MATRICULA(POSGRADO)',2),
+(210025,210,025,'MAESTRIA EN INGENIERIA DE SISTEMAS E INFORMATICA CON MENSCION EN ISW-MATRICULA(POSGRADO)',2),
+(210050,210,050,'DIPLOMATURA AUDITORIA Y SEGURIDAD DE TECNOLOGIA-PENSION(POSGRADO)',2),
+(210068,210,068,'MAESTRIA EN INGENIERIA DE SISTEMAS E INFORMATICA CON MENCION EN ISW-PENSION(POSGRADO)',2),
+(210071,210,071,'DIPLOMATURA GERENCIA DE PROYECTOS DE TECNOLOGIAS DE INFORMACION-MATRICULA(POSGRADO)',2),
+(210081,210,081,'MAESTRIA EN GESTION DE LA INFORMACION Y DEL CONOCIMIENTO-PENSION(POSGRADO)',2),
+(210086,210,086,'MAESTRIA PROFESIONAL EN GOBIERNO DE TECNOLOGIAS DE INFORMACION-PENSION(POSGRADO)',2),
+(210103,210,103,'DIPLOMATURA GERENCIA DE PROYECTOS DE TECNOLOGIAS DE INFORMACION-PENSION(POSGRADO)',2),
+(210104,210,104,'CERTIFICADO DE ESTUDIOS DE LAS DIPLOMATURAS',2),
+(210105,210,105,'DIPLOMATURA EN GESTION PUBLICA Y GOBIERNO ELECTRONICO-MATRICULA(POSGRADO)',2),
+(210111,210,111,'TRAMITE DE ACTAS ADICIONALES(POSGRADO)',2),
+(210112,210,112,'CONVALIDACION DE CURSOS(POSGRADO)',2),
+(210115,210,115,'DUPLICADO DE ACTA(POSGRADO)',2),
+(210165,210,165,'CONST. DE EGRESADO DOCTORADO, MAESTRIA Y DIPLOMATURA(POSGRADO)',2),
+(210168,210,168,'CONST. DE ESTUDIOS DOCTORADO, MAESTRIA Y DIPLOMATURA(POSGRADO)',2),
+(210169,210,169,'CONST. DE EXPEDITO DOCTORADO Y MAESTRIA(POSGRADO)',2),
+(210173,210,173,'CONST. DE NO ADEUDAR DINERO A LA UNIDAD DE POST-GRADO',2),
+(210202,210,202,'GRADO MAGISTER',2),
+(210261,210,261,'GRADO DE DOCTOR',2),
+(210352,210,352,'DIPLOMATURA EN GESTION PUBLICA Y GOBIERNO ELECTRONICO-PENSION(POSGRADO)',2),
+(210508,210,508,'RETENCION DESCUENTO POR PLANILLA-UPG',2),
+(210509,210,509,'INGRESOS VARIOS DE POSGRADO',2);
+
+
+INSERT INTO CONCEPTO (concepto, concep_a, concep_b, descripcion, id_clase_pagos) VALUES
+(210001,210,001,'MATRICULA REGULAR, MATRICULA REPITENTES',1),
+(210006,210,006,'REACTUALIZACION DE MATRICULA',1),
+(210004,210,004,'EXAMEN AD HOC, EXAMEN APLAZADO,ALUMNO REGULAR, ALUMNO INGRESANTE',1),
+(210003,210,003,'RECTIFICACION DE MATRICULA',1),
+(210007,210,007,'MATRICULA DE REZAGADOS',1),
+(210005,210,005,'ANULACION DE INGRESO',1),
+(210019,210,019,'ANUNLACION DE MATRICULA POR TRASLADO',1),
+(210201,210,201,'GRADO ACADEMICO DE BACHILLER',1),
+(210204,210,204,'TITULO PROFESIONAL',1),
+(210151,210,151,'CONSTANCIA DE INGRESO (A PARTIR DE 1984)',1),
+(210152,210,152,'CONSTANCIA DE MATRICULA',1),
+(210153,210,153,'CONSTANCIA DE ESTUDIOS',1),
+(210159,210,159,'CONSTANCIA DE NOTAS POR CURSO',1),
+(210154,210,154,'CONSTANCIA DE ORDEN DE MERITO',1),
+(210155,210,155,'CONSTANCIA DE EGRESADO',1),
+(210177,210,177,'CONSTANCIA DE NO ADEUDAR LIBROS A LA BIBLIOTECA',1),
+(210158,210,158,'CONSTANCIA DE NO ADEUDAR BIENES Y/O DINERO A LA FACULTAD',1),
+(210156,210,156,'CARTA DE PRESENTACION DE DECANO',1),
+(210301,210,301,'DUPLICADO DE REPORTE DE MATRICULA',1),
+(210101,210,101,'CERTIFICADOS DE ESTUDIOS POR SEMESTRE ACADEMICO(A PARTIR DE 1984)',1),
+(210102,210,102,'CERTIFICADOS DE ESTUDIOS POR ANO ACADEMICO (A PARTIR DE 1984)',1),
+(210106,210,106,'ACTA ADICIONAL',1),
+(210107,210,107,'CONVALIDACION POR CURSO',1),
+(210164,210,164,'HISTORIAL ACADEMICO (RECORD ACADEMICO POR ANO)',1),
+(210252,210,252,'CERTIFICACION DE FOTOCOPIAS DE DOCUMENTOS DE LA FACULTAD',1),
+(210255,210,255,'CERTIFICACION DE FOTOCOPIAS DE DOCUMENTOS DE LA UNIVERSIDAD',1),
+(210256,210,256,'CERTIFICACION DE DOCUMENTOS NO ORIGINADOS POR LA UNIV. QUE OBRAN EN EXPEDIENTE',1),
+(210257,210,257,'SYLLABUS POR PAGINA',1),
+(210251,210,251,'FOTOCOPIA SIMPLE DE RESOLUCION DE DECANATO',1),
+(210253,210,252,'FOTOCOPIA CERTIFICADA DE RESOLUCION DE DECANATO',1);
+
+
+---------------INSERT_CONFIGURACION------------------
+
+INSERT INTO CONFIGURACION(descripcion, id_clase_pagos, estado) VALUES
+('Apertura de Conceptos Postgrado', 2 , 'S'),
+('Apertura de Conceptos Pregrado', 1 , 'N'),
+('Apertura de Conceptos Pre y Pos', 1 , 'B'),
+('Apertura de Conceptos Pre y Pos', 2 , 'B');
+
+
+
